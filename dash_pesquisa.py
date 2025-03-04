@@ -182,4 +182,3 @@ if st.button("📄 Gerar Relatório PDF"):
             file_name="relatorio_falhas.pdf",
             mime="application/pdf"
         )
- 
