@@ -52,7 +52,7 @@ streamlit run app.py
 ## 📝 Como Contribuir
 1. **Clone o repositório**:
    ```sh
-   git clone https://github.com/Nelsonbjunior/tpv2.git
+   git clone https://github.com/Nelsonbjunior/tpv.git
    ```
 2. **Crie uma branch para sua feature**:
    ```sh
