@@ -114,9 +114,18 @@ st.download_button(
     mime="text/csv"
 )
 
-# Classe PDF formatado
+# Classe PDF formatado com logomarca
 class PDF(FPDF):
+    def __init__(self, logo_path=None):
+        super().__init__()
+        self.logo_path = logo_path  # Caminho para a logomarca
+
     def header(self):
+        # Adicionar logomarca
+        if self.logo_path:
+            self.image(self.logo_path, x=10, y=8, w=33)  # Ajuste x, y, w conforme necessário
+        
+        # Título e data de geração
         self.set_font("Arial", "B", 14)
         self.cell(0, 10, "Relatório de Falhas", ln=True, align="C")
         self.set_font("Arial", "", 10)
@@ -129,7 +138,7 @@ class PDF(FPDF):
         self.cell(0, 10, f"Página {self.page_no()}", align="C")
 
     def adicionar_tabela(self, df):
-        col_widths = [15, 35, 35, 15, 35, 20, 35]  # Agora tem 7 colunas
+        col_widths = [15, 35, 35, 15, 35, 20, 35]  # Largura das colunas
         headers = ["Estação", "SN", "Máquina", "Berço", "Data", "Resultado", "Parâmetros"]
 
         self.set_fill_color(200, 200, 200)
@@ -150,9 +159,9 @@ class PDF(FPDF):
             self.cell(col_widths[6], 8, str(row["parametro"]), border=1, align="C")
             self.ln()
 
-# Função para gerar PDF com base nos filtros aplicados
-def gerar_pdf(df_filtrado):
-    pdf = PDF()
+# Função para gerar PDF com base nos filtros aplicados e logomarca
+def gerar_pdf(df_filtrado, logo_path=None):
+    pdf = PDF(logo_path=logo_path)  # Passar o caminho da logomarca
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     pdf.adicionar_tabela(df_filtrado)  # Usar o DataFrame filtrado
@@ -163,7 +172,9 @@ def gerar_pdf(df_filtrado):
 
 # Botão para gerar e baixar o PDF
 if st.button("📄 Gerar Relatório PDF"):
-    file_path = gerar_pdf(df_filtrado)  # Passar o DataFrame filtrado
+    # Caminho para a logomarca (ajuste conforme necessário)
+    logo_path = "tpv.png"  # Substitua pelo caminho correto da sua imagem
+    file_path = gerar_pdf(df_filtrado, logo_path=logo_path)  # Passar o DataFrame filtrado e o caminho da logomarca
     with open(file_path, "rb") as file:
         st.download_button(
             label="📥 Baixar PDF",
